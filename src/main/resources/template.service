@@ -1,0 +1,13 @@
+[Unit]
+Description=${description}
+After=${after}
+
+[Service]
+EnvironmentFile=${environmentFile}
+Type=simple
+ExecStart=${execStart}
+Restart=${restart}
+User=${user}
+
+[Install]
+WantedBy=multi-user.target
