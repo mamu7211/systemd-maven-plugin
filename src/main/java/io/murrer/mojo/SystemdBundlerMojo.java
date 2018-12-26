@@ -1,6 +1,6 @@
 package io.murrer.mojo;
 
-import io.murrer.creator.*;
+import io.murrer.worker.*;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -11,6 +11,7 @@ import org.apache.maven.project.MavenProject;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.Instant;
 
 @Mojo(
         name = "systemd-bundler",
@@ -22,11 +23,11 @@ public class SystemdBundlerMojo extends AbstractMojo {
     @Parameter(defaultValue = "${project}", readonly = true)
     private MavenProject project;
 
-    @Parameter(defaultValue = "/opt/${project.artifactId}/${project.version}")
-    private String installDirectory;
+    @Parameter(defaultValue = "${unit}")
+    private Unit unit;
 
-    @Parameter(defaultValue = "${user.name}")
-    private String unitUser;
+    @Parameter(defaultValue = "${install}")
+    private Install install;
 
     private ZipCreator zipCreator;
     private UnitFileCreator unitFileCreator;
@@ -39,7 +40,8 @@ public class SystemdBundlerMojo extends AbstractMojo {
         if (project.getPackaging().matches("jar")) {
             try {
                 setup();
-                File unitFile = unitFileCreator.write();
+
+                File unitFile = unitFileCreator.write(project, unit, install);
                 File jarFile = new File(project.getBuild().getDirectory(), project.getBuild().getFinalName() + ".jar");
                 File installFile = installFileCreator.write();
                 File runFile = runFileCreator.write();
@@ -53,11 +55,16 @@ public class SystemdBundlerMojo extends AbstractMojo {
         }
     }
 
-    private void setup() {
+    private void setup() throws MojoExecutionException {
+
         zipCreator = new ZipCreator(project, getLog());
         unitFileCreator = new UnitFileCreator(project, getLog());
         installFileCreator = new InstallFileCreator(project, getLog());
         runFileCreator = new RunFileCreator(project, getLog());
         environmentFileWriter = new EnvironmentFileWriter(project, getLog());
+
+        unit.updateDefaults(project);
+        install.updateDefaults(project);
     }
 }
+

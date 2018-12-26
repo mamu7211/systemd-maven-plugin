@@ -1,0 +1,40 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>io.murrer</groupId>
+    <artifactId>simple-pom</artifactId>
+    <description>Simple Test POM</description>
+    <packaging>jar</packaging>
+    <version>1.0-SNAPSHOT</version>
+    <name>simple-pom</name>
+
+    <url>http://maven.apache.org</url>
+
+    <dependencies>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>io.murrer</groupId>
+                <artifactId>systemd-maven-plugin</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <configuration>
+                    <unit>
+                        <description>TEST-TEST</description>
+                    </unit>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>systemd-bundler</goal>
+                        </goals>
+                        <phase>package</phase>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

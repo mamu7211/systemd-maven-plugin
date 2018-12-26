@@ -1,4 +1,4 @@
-package io.murrer.tool;
+package io.murrer.worker;
 
 import lombok.Getter;
 import org.apache.maven.plugin.MojoExecutionException;

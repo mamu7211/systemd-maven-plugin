@@ -1,6 +1,6 @@
 package io.murrer.utils;
 
-import io.murrer.tool.AbstractWorker;
+import io.murrer.worker.AbstractWorker;
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.model.Resource;
 import org.apache.maven.plugin.logging.Log;
@@ -37,7 +37,7 @@ public class ProjectPropertyFileScanner extends AbstractWorker {
         List<String> properties = new ArrayList<>();
 
         for (File propertyFile : propertyFiles) {
-            properties.addAll(PropertyUtils.getUnresolvedProperties(FileUtils.readLines(propertyFile, StandardCharsets.UTF_8)));
+            properties.addAll(PropertyUtils.getUnresolvedProperties(FileUtils.readLines(propertyFile, StandardCharsets.UTF_8.name())));
         }
 
         return properties;

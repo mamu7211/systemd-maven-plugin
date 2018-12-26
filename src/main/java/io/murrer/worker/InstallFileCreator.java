@@ -1,6 +1,5 @@
-package io.murrer.creator;
+package io.murrer.worker;
 
-import io.murrer.tool.AbstractWorker;
 import io.murrer.utils.ResourceUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.MojoExecutionException;

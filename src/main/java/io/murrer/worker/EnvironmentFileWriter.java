@@ -1,6 +1,5 @@
-package io.murrer.creator;
+package io.murrer.worker;
 
-import io.murrer.tool.AbstractWorker;
 import io.murrer.utils.FileConstants;
 import io.murrer.utils.ProjectPropertyFileScanner;
 import org.apache.commons.io.FileUtils;
