@@ -1,5 +1,6 @@
 package io.murrer.mojo;
 
+import io.murrer.templating.MojoContext;
 import io.murrer.worker.*;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -11,7 +12,6 @@ import org.apache.maven.project.MavenProject;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.Instant;
 
 @Mojo(
         name = "systemd-bundler",
@@ -23,17 +23,21 @@ public class SystemdBundlerMojo extends AbstractMojo {
     @Parameter(defaultValue = "${project}", readonly = true)
     private MavenProject project;
 
-    @Parameter(defaultValue = "${unit}")
-    private Unit unit;
+    @Parameter(defaultValue = "${unitProperties}")
+    private UnitProperties unit;
 
-    @Parameter(defaultValue = "${install}")
-    private Install install;
+    @Parameter(defaultValue = "${installProperties}")
+    private InstallProperties install;
+
+    @Parameter(defaultValue = "${run}")
+    private RunProperties run;
+
+    @Parameter(defaultValue = "${environment}")
+    private EnvironmentProperties environment;
 
     private ZipCreator zipCreator;
-    private UnitFileCreator unitFileCreator;
-    private InstallFileCreator installFileCreator;
-    private RunFileCreator runFileCreator;
-    private EnvironmentFileWriter environmentFileWriter;
+    private MojoContext mojoContext;
+    private TemplateFileWriter templateFileWriter;
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
@@ -41,11 +45,13 @@ public class SystemdBundlerMojo extends AbstractMojo {
             try {
                 setup();
 
-                File unitFile = unitFileCreator.write(project, unit, install);
                 File jarFile = new File(project.getBuild().getDirectory(), project.getBuild().getFinalName() + ".jar");
-                File installFile = installFileCreator.write();
-                File runFile = runFileCreator.write();
-                File environmentFile = environmentFileWriter.write();
+
+                File unitFile = getUnitFile();
+                File installFile = getInstallFile();
+                File runFile = getRunFile();
+                File environmentFile = getEnvironmentFile();
+
                 zipCreator.zip(jarFile, unitFile, installFile, runFile, environmentFile);
             } catch (IOException e) {
                 throw new MojoExecutionException("Failed to create zip file.");
@@ -55,16 +61,47 @@ public class SystemdBundlerMojo extends AbstractMojo {
         }
     }
 
-    private void setup() throws MojoExecutionException {
+    private File getEnvironmentFile() throws MojoExecutionException {
+        return templateFileWriter.writeFile(
+                "environment.cfg",
+                mojoContext.getEnvironment().getTemplate()
+        );
+    }
 
-        zipCreator = new ZipCreator(project, getLog());
-        unitFileCreator = new UnitFileCreator(project, getLog());
-        installFileCreator = new InstallFileCreator(project, getLog());
-        runFileCreator = new RunFileCreator(project, getLog());
-        environmentFileWriter = new EnvironmentFileWriter(project, getLog());
+    private File getRunFile() throws MojoExecutionException {
+        return templateFileWriter.writeFile(
+                "run.sh",
+                mojoContext.getRun().getTemplate()
+        );
+    }
+
+    private File getInstallFile() throws MojoExecutionException {
+        return templateFileWriter.writeFile(
+                "install.sh",
+                mojoContext.getInstall().getTemplate()
+        );
+    }
+
+    private File getUnitFile() throws MojoExecutionException {
+        return templateFileWriter.writeFile(
+                mojoContext.getUnit().getFileName(),
+                mojoContext.getUnit().getTemplate()
+        );
+    }
+
+    private MojoContext setup() throws MojoExecutionException {
 
         unit.updateDefaults(project);
+        run.updateDefaults(project);
         install.updateDefaults(project);
+        environment.updateDefaults(project);
+
+        mojoContext = new MojoContext(getLog(), project, unit, run, install, environment);
+
+        zipCreator = new ZipCreator(mojoContext);
+        templateFileWriter = new TemplateFileWriter(mojoContext);
+
+        return null;
     }
 }
 

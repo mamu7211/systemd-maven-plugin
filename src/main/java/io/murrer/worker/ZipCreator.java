@@ -1,5 +1,7 @@
 package io.murrer.worker;
 
+import io.murrer.templating.MojoContext;
+import lombok.Getter;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 
@@ -12,14 +14,13 @@ import java.util.zip.ZipOutputStream;
 
 public class ZipCreator extends AbstractWorker {
 
-
-    public ZipCreator(MavenProject project, Log log) {
-        super(project, log);
+    public ZipCreator(MojoContext context) {
+        super(context);
     }
 
     public void zip(File... files) throws IOException {
 
-        File zip = new File(getProject().getBuild().getDirectory(), getProject().getBuild().getFinalName() + ".zip");
+        File zip = new File(getContext().getProject().getBuild().getDirectory(), getContext().getProject().getBuild().getFinalName() + ".zip");
 
         try (FileOutputStream fos = new FileOutputStream(zip);
              ZipOutputStream zos = new ZipOutputStream(fos)) {
@@ -28,11 +29,11 @@ public class ZipCreator extends AbstractWorker {
             }
         }
 
-        getLog().info(String.format("Archived everything in '%s'.", zip.getAbsolutePath()));
+        getContext().getLog().info(String.format("Archived everything in '%s'.", zip.getAbsolutePath()));
     }
 
     private void zipFile(File file, ZipOutputStream zos) throws IOException {
-        getLog().debug("Zipping '" + file.getAbsolutePath() + "'");
+        getContext().getLog().debug("Zipping '" + file.getAbsolutePath() + "'");
         FileInputStream fis = new FileInputStream(file);
         ZipEntry zipEntry = new ZipEntry(file.getName());
         zos.putNextEntry(zipEntry);

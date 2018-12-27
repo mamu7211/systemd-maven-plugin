@@ -1,10 +1,9 @@
 package io.murrer.utils;
 
+import io.murrer.templating.MojoContext;
 import io.murrer.worker.AbstractWorker;
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.model.Resource;
-import org.apache.maven.plugin.logging.Log;
-import org.apache.maven.project.MavenProject;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -20,13 +19,13 @@ public class ProjectPropertyFileScanner extends AbstractWorker {
     private static final String PROPERTY_FILE_REGEX = "^.+\\.properties$";
     private static final FilenameFilter PROPERTY_FILE_NAME_FILTER = (file, s) -> s.matches(PROPERTY_FILE_REGEX);
 
-    public ProjectPropertyFileScanner(MavenProject project, Log log) {
-        super(project, log);
+    public ProjectPropertyFileScanner(MojoContext context) {
+        super(context);
     }
 
     public List<String> getUnresolvedProperties() throws IOException {
 
-        List<File> propertyFiles = getProject().getResources().stream()
+        List<File> propertyFiles = getContext().getProject().getResources().stream()
                 .map(Resource::getDirectory)
                 .distinct()
                 .map(File::new)

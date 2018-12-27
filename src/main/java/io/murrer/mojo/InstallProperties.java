@@ -1,6 +1,5 @@
 package io.murrer.mojo;
 
-import io.murrer.utils.AbstractComplexMojoProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -10,7 +9,7 @@ import org.apache.maven.project.MavenProject;
 @Getter
 @NoArgsConstructor
 @ToString
-public class Install extends AbstractComplexMojoProperty {
+public class InstallProperties extends AbstractMojoProperties {
 
     private String installationDirectory;
 
@@ -21,5 +20,10 @@ public class Install extends AbstractComplexMojoProperty {
                 installationDirectory,
                 String.format("/opt/%s/%s/", project.getArtifactId(), project.getVersion())
         );
+    }
+
+    @Override
+    protected String getTemplateFileName() {
+        return "templates/install.sh";
     }
 }

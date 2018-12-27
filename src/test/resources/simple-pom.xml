@@ -21,9 +21,9 @@
                 <artifactId>systemd-maven-plugin</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <configuration>
-                    <unit>
+                    <unitProperties>
                         <description>TEST-TEST</description>
-                    </unit>
+                    </unitProperties>
                 </configuration>
                 <executions>
                     <execution>

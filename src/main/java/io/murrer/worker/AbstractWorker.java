@@ -1,9 +1,8 @@
 package io.murrer.worker;
 
+import io.murrer.templating.MojoContext;
 import lombok.Getter;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.logging.Log;
-import org.apache.maven.project.MavenProject;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,20 +10,18 @@ import java.io.IOException;
 @Getter
 public abstract class AbstractWorker {
 
-    private MavenProject project;
-    private Log log;
+    private MojoContext context;
 
-    public AbstractWorker(MavenProject project, Log log) {
-        this.project = project;
-        this.log = log;
+    public AbstractWorker(MojoContext context) {
+        this.context = context;
     }
 
     protected File createFile(String name) throws MojoExecutionException {
-        File file = new File(project.getBuild().getDirectory(), name);
+        File file = new File(context.getProject().getBuild().getDirectory(), name);
 
         if (file.exists()) {
             if (!file.delete()) {
-                getLog().warn(String.format("Delete of '%s' might not have succeeded, trying to create it anyways.", file.getAbsolutePath()));
+                context.getLog().warn(String.format("Delete of '%s' might not have succeeded, trying to create it anyways.", file.getAbsolutePath()));
             }
         }
 
@@ -35,9 +32,5 @@ public abstract class AbstractWorker {
         }
 
         return file;
-    }
-
-    protected String getArtifactId() {
-        return project.getArtifactId();
     }
 }
