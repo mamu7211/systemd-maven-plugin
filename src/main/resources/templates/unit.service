@@ -5,10 +5,10 @@ Description=\${unit.description}
 After=\${unit.after}
 
 [Service]
-EnvironmentFile=\${unit.environmentFile}
-WorkingDirectory=\${unit.workingDirectory}
-Type=${unit.type}
-ExecStart=\${unit.execStart}
+EnvironmentFile=\${environment.fileName}
+WorkingDirectory=\${install.directory}
+Type=\${unit.type}
+ExecStart=\${install.directory}/\${run.fileName}
 Restart=\${unit.restart}
 User=\${unit.user}
 

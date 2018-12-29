@@ -1,22 +1,31 @@
 package io.murrer.mojo;
 
+import io.murrer.utils.FileConstants;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.project.MavenProject;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Pattern;
 
 @Data
 @NoArgsConstructor
 @ToString
 public class UnitProperties extends AbstractMojoProperties {
 
+    public static final String RESTART_DIRECTIVE_VALUES = "always|on-success|on-failure|on-abnormal|on-abort|on-watchdog";
+    public static final String TYPE_DIRECTIVE_VALUES = "simple|forking|oneshot|dbus|notify";
+
+    public static final String REFERENCE_USER = "${user.name}";
+    public static final String REFERENCE_DESCRIPTION = "${project.description}";
+    public static final String REFERENCE_FILENAME = "${project.artifactId}";
+
+    public static final String DEFAULT_TYPE = "simple";
+    public static final String DEFAULT_WANTED_BY = "multi-user.target";
+    public static final String DEFAULT_AFTER = "network.target";
+    public static final String DEFAULT_RESTART = "always";
+
     @NotBlank(message = "Unit fileName must not be empty. This will be the unit file generated.")
-    private String fileName;
+    private String fileName = REFERENCE_FILENAME + FileConstants.EXTENSION_UNIT_FILE;
 
     private String templateFileLocation;
 
@@ -25,82 +34,44 @@ public class UnitProperties extends AbstractMojoProperties {
      */
     @NotBlank(message = "Units [Unit] directive 'description' must not be empty. " +
             "Default will be '\\${project.artifactId}'.")
-    private String description;
+    private String description = REFERENCE_DESCRIPTION;
 
     /**
      * Configuration option for [Unit] After
      */
     @NotBlank(message = "Unit directive 'after' must not be empty. " +
             "Default will be 'network.target'.")
-    private String after = "network.target";
-
-    /**
-     * Configuration option for [Unit] WorkingDirectory
-     */
-    @NotBlank(message = "Units [Service] directive 'workingDirectory' must not be empty. " +
-            "Default will be '/opt/\\${project.artifactID}/\\${project.version}")
-    private String workingDirectory;
+    private String after = DEFAULT_AFTER;
 
     /**
      * Configuration option for [Unit] User
      */
     @NotBlank(message = "Units [Service] directive 'user' must not be empty. ")
-    private String user;
+    private String user = REFERENCE_USER;
 
     /**
      * Configuration option for [Unit] WantedBy=${unit.wantedBy}
      */
     @NotBlank(message = "Units [Install] directive 'wantedBy' must not be empty. " +
             "Default will be 'multi-user.target'.")
-    private String wantedBy;
-
-    /**
-     * Configuration option for [Unit] EnvironmentFile.
-     */
-    @NotBlank(message = "Units [Service] 'envitonmentFile' must not be empty. " +
-            "Default will be 'environment.cfg'.")
-    private String environmentFile = "environment.cfg";
+    private String wantedBy = DEFAULT_WANTED_BY;
 
     /**
      * Configuration option for [Unit] Type
      */
     @NotBlank(message = "Unit [Service] directive 'type' must not be empty. " +
             "Default will be 'simple'.")
-    @Pattern(regexp = "^(simple|forking|oneshot|dbus|notify)$",
-            message = "Units [Service] directive 'type' must be one of [simple|forking|oneshot|dbus|notify].")
-    private String type = "simple";
-
-    /**
-     * Configuration option for [Unit] ExecStart
-     */
-    @NotBlank(message = "Unit [Service] execStart must not be empty. " +
-            "Default will be set so that run.sh is executed.")
-    private String execStart;
+    private String type = DEFAULT_TYPE;
 
     /**
      * Configuration option for [Unit] Restart
      */
     @NotBlank(message = "Units [Service] directive 'restart' must not be empty. " +
             "Default will be 'always'")
-    private String restart = "always";
-
-
-    @Override
-    public void updateDefaults(MavenProject project) throws MojoExecutionException {
-        fileName = String.format("%s.service", defaultValue(fileName, project.getArtifactId()));
-
-        description = defaultValue(description, project.getDescription());
-        workingDirectory = defaultValue(workingDirectory, String.format("/opt/%s/%s/", project.getArtifactId(), project.getVersion()));
-        user = defaultValue(user, "user");
-        after = defaultValue(after, "network.target");
-        wantedBy = defaultValue(wantedBy, "multi-user.target");
-        environmentFile = defaultValue(environmentFile, workingDirectory + "environment.cfg");
-        type = defaultValue(type, "simple");
-        execStart = defaultValue(execStart, "run.sh");
-    }
+    private String restart = DEFAULT_RESTART;
 
     @Override
     protected String getTemplateFileName() {
-        return "templates/unit.service";
+        return "templates/unit" + FileConstants.EXTENSION_UNIT_FILE;
     }
 }

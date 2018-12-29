@@ -1,14 +1,18 @@
 package io.murrer.mojo;
 
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.project.MavenProject;
+import io.murrer.utils.FileConstants;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
+@Data
+@NoArgsConstructor
+@ToString
 public class RunProperties extends AbstractMojoProperties {
 
-    @Override
-    public void updateDefaults(MavenProject project) throws MojoExecutionException {
+    public static final String DEFAULT_RUN_FILENAME = "${project.artifactId}" + FileConstants.EXTENSION_SCRIPT;
 
-    }
+    private String fileName = DEFAULT_RUN_FILENAME;
 
     @Override
     protected String getTemplateFileName() {

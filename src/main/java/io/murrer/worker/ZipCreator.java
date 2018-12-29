@@ -1,9 +1,6 @@
 package io.murrer.worker;
 
 import io.murrer.templating.MojoContext;
-import lombok.Getter;
-import org.apache.maven.plugin.logging.Log;
-import org.apache.maven.project.MavenProject;
 
 import java.io.File;
 import java.io.FileInputStream;

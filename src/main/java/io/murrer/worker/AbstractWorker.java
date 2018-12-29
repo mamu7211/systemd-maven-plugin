@@ -6,6 +6,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 
 @Getter
 public abstract class AbstractWorker {
@@ -17,7 +18,7 @@ public abstract class AbstractWorker {
     }
 
     protected File createFile(String name) throws MojoExecutionException {
-        File file = new File(context.getProject().getBuild().getDirectory(), name);
+        File file = Paths.get(context.getProject().getBuild().getDirectory(), "systemd-bundler", name).toFile();
 
         if (file.exists()) {
             if (!file.delete()) {
@@ -26,6 +27,9 @@ public abstract class AbstractWorker {
         }
 
         try {
+            if (!file.getParentFile().exists()){
+                file.getParentFile().mkdirs();
+            }
             file.createNewFile();
         } catch (IOException e) {
             throw new MojoExecutionException(String.format("Failed to create file '%s'.", file.getAbsolutePath()));

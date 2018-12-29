@@ -1,7 +1,9 @@
 package io.murrer.mojo;
 
 import io.murrer.templating.MojoContext;
-import io.murrer.worker.*;
+import io.murrer.utils.SystemUtils;
+import io.murrer.worker.TemplateFileWriter;
+import io.murrer.worker.ZipCreator;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -20,11 +22,14 @@ import java.io.IOException;
 )
 public class SystemdBundlerMojo extends AbstractMojo {
 
+    @Parameter(defaultValue = "true")
+    private boolean zipFile = true;
+
     @Parameter(defaultValue = "${project}", readonly = true)
     private MavenProject project;
 
     @Parameter(defaultValue = "${unitProperties}")
-    private UnitProperties unit;
+    private UnitProperties unit = new UnitProperties();
 
     @Parameter(defaultValue = "${installProperties}")
     private InstallProperties install;
@@ -52,7 +57,9 @@ public class SystemdBundlerMojo extends AbstractMojo {
                 File runFile = getRunFile();
                 File environmentFile = getEnvironmentFile();
 
-                zipCreator.zip(jarFile, unitFile, installFile, runFile, environmentFile);
+                if (zipFile) {
+                    zipCreator.zip(jarFile, unitFile, installFile, runFile, environmentFile);
+                }
             } catch (IOException e) {
                 throw new MojoExecutionException("Failed to create zip file.");
             }
@@ -91,12 +98,7 @@ public class SystemdBundlerMojo extends AbstractMojo {
 
     private MojoContext setup() throws MojoExecutionException {
 
-        unit.updateDefaults(project);
-        run.updateDefaults(project);
-        install.updateDefaults(project);
-        environment.updateDefaults(project);
-
-        mojoContext = new MojoContext(getLog(), project, unit, run, install, environment);
+        mojoContext = new MojoContext(getLog(), project, new SystemUtils(), unit, run, install, environment);
 
         zipCreator = new ZipCreator(mojoContext);
         templateFileWriter = new TemplateFileWriter(mojoContext);
