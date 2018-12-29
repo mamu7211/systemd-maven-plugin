@@ -4,6 +4,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import javax.validation.constraints.NotBlank;
+
 import static io.murrer.utils.FileConstants.EXTENSION_UNIT_FILE;
 
 @Data

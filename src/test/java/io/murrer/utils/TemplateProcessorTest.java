@@ -76,7 +76,12 @@ public class TemplateProcessorTest {
             "${project.version}," + PROJECT_VERSION,
             "${project.description}," + PROJECT_DESCRIPTION,
             // Build
-            "${project.build.outputDirectory}," + BUILD_OUTPUT_DIRECTORY
+            "${project.build.outputDirectory}," + BUILD_OUTPUT_DIRECTORY,
+            "${project.build.finalName}," + BUILD_FINALNAME,
+            // System
+            "${user.name}," + GLOBAL_USER_NAME,
+            "${user.home}," + GLOBAL_USER_HOME
+
     })
     public void testProjectProperties(String property, String expected) throws SystemdMojoExecutionException {
         String actual = TemplateProcessor.process(property, mojoContext);
@@ -94,6 +99,7 @@ public class TemplateProcessorTest {
             "${unit.wantedBy}," + UnitProperties.DEFAULT_WANTED_BY,
             "${unit.type}," + UnitProperties.DEFAULT_TYPE,
             "${unit.restart}," + UnitProperties.DEFAULT_RESTART,
+            "${unit.execStart}," + RunProperties.DEFAULT_JAVA_PATH + "/java -jar " + BUILD_FINALNAME + ".jar",
             // Install Replacements
             "${install.fileName}," + InstallProperties.DEFAULT_INSTALL_FILE_NAME,
             "${install.directory}," + DEFAULT_EXECUTION_DIRECTORY,
@@ -101,13 +107,11 @@ public class TemplateProcessorTest {
             "${install.startService}," + InstallProperties.DEFAULT_START_SERVICE,
             // Run Replacements
             "${run.fileName}," + PROJECT_ARTIFACT_ID + EXTENSION_SCRIPT,
+            "${run.javaPath}," + RunProperties.DEFAULT_JAVA_PATH,
             // Environment Filename
             "${environment.fileName}," + EnvironmentProperties.DEFAULT_ENVIRONMENT_FILENAME,
             "${environment.directory}," + DEFAULT_EXECUTION_DIRECTORY,
-            "${environment.overwriteInstalled}," + EnvironmentProperties.DEFAULT_OVERWRITE_INSTALLED,
-            // System
-            "${user.name}," + GLOBAL_USER_NAME,
-            "${user.home}," + GLOBAL_USER_HOME
+            "${environment.overwriteInstalled}," + EnvironmentProperties.DEFAULT_OVERWRITE_INSTALLED
     })
     public void testDefaultReplacements(String property, String expected) throws SystemdMojoExecutionException {
         String actual = TemplateProcessor.process(property, mojoContext);

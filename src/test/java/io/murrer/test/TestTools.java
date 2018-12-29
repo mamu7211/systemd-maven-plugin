@@ -18,6 +18,7 @@ public class TestTools {
     public static final String PROJECT_GROUP_ID = "PROJECT-GROUP-ID";
     public static final String PROJECT_ARTIFACT_ID = "PROJECT-ARTIFACT-ID";
     public static final String BUILD_OUTPUT_DIRECTORY = "BUILD-OUTPUT-DIRECTORY";
+    public static final String BUILD_FINALNAME = "BUILD-FINALNAME";
     public static final String UNIT_FILENAME = "UNIT-FILENAME";
     public static final String UNIT_DESCRIPTION = "UNIT-DESCRIPTION";
     public static final String UNIT_AFTER = "UNIT-AFTER";
@@ -60,7 +61,7 @@ public class TestTools {
         when(projectMock.getBuild()).thenReturn(buildMock);
 
         when(buildMock.getOutputDirectory()).thenReturn(BUILD_OUTPUT_DIRECTORY);
-
+        when(buildMock.getFinalName()).thenReturn(BUILD_FINALNAME);
         return projectMock;
     }
 
