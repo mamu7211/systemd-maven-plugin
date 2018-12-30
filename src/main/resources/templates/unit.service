@@ -6,9 +6,9 @@ After=\${unit.after}
 
 [Service]
 EnvironmentFile=\${environment.fileName}
-WorkingDirectory=\${install.directory}
+WorkingDirectory=\${unit.workingDirectory}
 Type=\${unit.type}
-ExecStart=\${install.directory}/\${run.fileName}
+ExecStart=\${unit.execStart}
 Restart=\${unit.restart}
 User=\${unit.user}
 

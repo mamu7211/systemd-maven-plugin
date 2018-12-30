@@ -1,6 +1,7 @@
 package io.murrer.mojo;
 
 import io.murrer.templating.MojoContext;
+import io.murrer.templating.TemplateProcessor;
 import io.murrer.utils.SystemUtils;
 import io.murrer.worker.TemplateFileWriter;
 import io.murrer.worker.ZipCreator;
@@ -16,7 +17,7 @@ import java.io.File;
 import java.io.IOException;
 
 @Mojo(
-        name = "systemd-bundler",
+        name = "bundle",
         defaultPhase = LifecyclePhase.PACKAGE,
         threadSafe = true
 )
@@ -50,6 +51,7 @@ public class SystemdBundlerMojo extends AbstractMojo {
             try {
                 setup();
 
+                //TODO - check which artifact gets created
                 File jarFile = new File(project.getBuild().getDirectory(), project.getBuild().getFinalName() + ".jar");
 
                 File unitFile = getUnitFile();
@@ -70,28 +72,28 @@ public class SystemdBundlerMojo extends AbstractMojo {
 
     private File getEnvironmentFile() throws MojoExecutionException {
         return templateFileWriter.writeFile(
-                "environment.cfg",
+                TemplateProcessor.process(mojoContext.getEnvironment().getFileName(), mojoContext),
                 mojoContext.getEnvironment().getTemplate()
         );
     }
 
     private File getRunFile() throws MojoExecutionException {
         return templateFileWriter.writeFile(
-                "run.sh",
+                TemplateProcessor.process(mojoContext.getRun().getFileName(), mojoContext),
                 mojoContext.getRun().getTemplate()
         );
     }
 
     private File getInstallFile() throws MojoExecutionException {
         return templateFileWriter.writeFile(
-                "install.sh",
+                TemplateProcessor.process(mojoContext.getInstall().getFileName(), mojoContext),
                 mojoContext.getInstall().getTemplate()
         );
     }
 
     private File getUnitFile() throws MojoExecutionException {
         return templateFileWriter.writeFile(
-                mojoContext.getUnit().getFileName(),
+                TemplateProcessor.process(mojoContext.getUnit().getFileName(), mojoContext),
                 mojoContext.getUnit().getTemplate()
         );
     }

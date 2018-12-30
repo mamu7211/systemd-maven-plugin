@@ -4,8 +4,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import javax.validation.constraints.NotBlank;
-
 import static io.murrer.utils.FileConstants.EXTENSION_UNIT_FILE;
 
 @Data
@@ -13,14 +11,15 @@ import static io.murrer.utils.FileConstants.EXTENSION_UNIT_FILE;
 @ToString
 public class InstallProperties extends AbstractMojoProperties {
 
-    public static final String DEFAULT_INSTALL_BASE_DIRECTORY = "/opt";
+    public static final String DEFAULT_BASE_DIRECTORY = "/var";
+    public static final String DEFAULT_DIRECTORY = DEFAULT_BASE_DIRECTORY + "/${project.artifactId}/${project.version}";
     public static final boolean DEFAULT_OVERWRITE_INSTALLED = false;
     public static final boolean DEFAULT_START_SERVICE = true;
     public static final String DEFAULT_INSTALL_FILE_NAME = "install" + EXTENSION_UNIT_FILE;
 
     private String fileName = DEFAULT_INSTALL_FILE_NAME;
 
-    private String directory = DEFAULT_INSTALL_BASE_DIRECTORY + "/${project.artifactId}/${project.version}";
+    private String directory = DEFAULT_DIRECTORY;
 
     private boolean overwriteInstalled = DEFAULT_OVERWRITE_INSTALLED;
 

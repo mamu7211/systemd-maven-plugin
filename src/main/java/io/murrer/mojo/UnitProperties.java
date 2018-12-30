@@ -25,6 +25,7 @@ public class UnitProperties extends AbstractMojoProperties {
     public static final String DEFAULT_AFTER = "network.target";
     public static final String DEFAULT_RESTART = "always";
     public static final String DEFAULT_EXEC_START = "${run.javaPath}/java -jar ${project.build.finalName}.jar";
+    private static final String DEFAULT_WORKING_DIRECTORY = "${install.directory}";
 
     @NotBlank(message = "Unit fileName must not be empty. This will be the unit file generated.")
     private String fileName = REFERENCE_FILENAME + FileConstants.EXTENSION_UNIT_FILE;
@@ -77,6 +78,9 @@ public class UnitProperties extends AbstractMojoProperties {
             "Default will be 'always'")
     private String execStart = DEFAULT_EXEC_START;
 
+    @NotBlank(message = "Units [Service] directive 'WorkingDirectory' must not be empty. " +
+            "Default will be '\\${install.directory}'")
+    private String workingDirectory = DEFAULT_WORKING_DIRECTORY;
     @Override
     protected String getTemplateFileName() {
         return "templates/unit" + FileConstants.EXTENSION_UNIT_FILE;

@@ -25,7 +25,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @Slf4j
 public class TemplateProcessorTest {
 
-    public static final String DEFAULT_EXECUTION_DIRECTORY = InstallProperties.DEFAULT_INSTALL_BASE_DIRECTORY + "/" + PROJECT_ARTIFACT_ID + "/" + PROJECT_VERSION;
+    public static final String DEFAULT_EXECUTION_DIRECTORY = InstallProperties.DEFAULT_BASE_DIRECTORY + "/" + PROJECT_ARTIFACT_ID + "/" + PROJECT_VERSION;
+
     private MavenProject project;
     private UnitProperties unitProperties;
     private MojoContext mojoContext;
@@ -68,7 +69,7 @@ public class TemplateProcessorTest {
         assertThrows(CyclicPropertyReferenceException.class, e, "Cyclic reference was not catched.");
     }
 
-    @ParameterizedTest(name = "Templating for Maven Property ''{0}''")
+    @ParameterizedTest(name = "Maven and system related template property ''{0}''")
     @CsvSource({
             // Project
             "${project.groupId}," + PROJECT_GROUP_ID,
@@ -88,7 +89,7 @@ public class TemplateProcessorTest {
         assertEquals(expected, actual, String.format("Template result '%s' did not match expected '%s'", actual, expected));
     }
 
-    @ParameterizedTest(name = "Templating for Systemd Mojo Property ''{0}''")
+    @ParameterizedTest(name = "Systemd related placeholder property ''{0}''")
     @CsvSource({
             // Unit Replacements
             "${unit.fileName}," + PROJECT_ARTIFACT_ID + EXTENSION_UNIT_FILE,
@@ -99,7 +100,8 @@ public class TemplateProcessorTest {
             "${unit.wantedBy}," + UnitProperties.DEFAULT_WANTED_BY,
             "${unit.type}," + UnitProperties.DEFAULT_TYPE,
             "${unit.restart}," + UnitProperties.DEFAULT_RESTART,
-            "${unit.execStart}," + RunProperties.DEFAULT_JAVA_PATH + "/java -jar " + BUILD_FINALNAME + ".jar",
+            "${unit.execStart}," + DEFAULT_EXECUTION_DIRECTORY + "/" + RunProperties.DEFAULT_RUN_FILENAME, //RunProperties.DEFAULT_JAVA_PATH + "/java -jar " + BUILD_FINALNAME + ".jar",
+            "${unit.workingDirectory}," + DEFAULT_EXECUTION_DIRECTORY,
             // Install Replacements
             "${install.fileName}," + InstallProperties.DEFAULT_INSTALL_FILE_NAME,
             "${install.directory}," + DEFAULT_EXECUTION_DIRECTORY,
@@ -135,6 +137,6 @@ public class TemplateProcessorTest {
 
     @Test
     public void testRunResourceTemplate() throws SystemdMojoExecutionException {
-        TemplateProcessor.process(ResourceUtils.textOf("templates/run.sh"), mojoContext);
+        TemplateProcessor.process(ResourceUtils.textOf("templates/service.sh"), mojoContext);
     }
 }
