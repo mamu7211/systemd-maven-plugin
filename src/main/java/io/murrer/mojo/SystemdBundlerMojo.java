@@ -56,11 +56,11 @@ public class SystemdBundlerMojo extends AbstractMojo {
 
                 File unitFile = getUnitFile();
                 File installFile = getInstallFile();
-                File runFile = getRunFile();
+                File serviceFile = getServiceFile();
                 File environmentFile = getEnvironmentFile();
 
                 if (zipFile) {
-                    zipCreator.zip(jarFile, unitFile, installFile, runFile, environmentFile);
+                    zipCreator.zip(jarFile, serviceFile, unitFile, installFile, environmentFile);
                 }
             } catch (IOException e) {
                 throw new MojoExecutionException("Failed to create zip file.");
@@ -77,18 +77,22 @@ public class SystemdBundlerMojo extends AbstractMojo {
         );
     }
 
-    private File getRunFile() throws MojoExecutionException {
-        return templateFileWriter.writeFile(
+    private File getServiceFile() throws MojoExecutionException {
+        File serviceFile = templateFileWriter.writeFile(
                 TemplateProcessor.process(mojoContext.getRun().getFileName(), mojoContext),
                 mojoContext.getRun().getTemplate()
         );
+        serviceFile.setExecutable(true);
+        return serviceFile;
     }
 
     private File getInstallFile() throws MojoExecutionException {
-        return templateFileWriter.writeFile(
+        File installFile = templateFileWriter.writeFile(
                 TemplateProcessor.process(mojoContext.getInstall().getFileName(), mojoContext),
                 mojoContext.getInstall().getTemplate()
         );
+        installFile.setExecutable(true);
+        return installFile;
     }
 
     private File getUnitFile() throws MojoExecutionException {

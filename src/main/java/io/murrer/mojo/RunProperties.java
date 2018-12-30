@@ -22,6 +22,6 @@ public class RunProperties extends AbstractMojoProperties {
 
     @Override
     protected String getTemplateFileName() {
-        return "templates/run.sh";
+        return "templates/service.sh";
     }
 }

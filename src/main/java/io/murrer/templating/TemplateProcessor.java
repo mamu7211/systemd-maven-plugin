@@ -26,6 +26,7 @@ public class TemplateProcessor {
         binding.put("user", context.getSystem().getUser());
 
         String lastPass = template.replaceAll(FileConstants.LINE_ENDING_REGEX, FileConstants.LINUX_LINE_ENDING);
+
         String currentPass;
         int tries = 1;
 
@@ -33,7 +34,7 @@ public class TemplateProcessor {
             currentPass = lastPass;
             try {
                 lastPass = engine.createTemplate(lastPass).make(binding).toString();
-            } catch (IOException | ClassNotFoundException e) {
+            } catch (Exception e) {
                 throw new TemplateException(String.format("Failed to process template \n>>>\n%s\n<<<\n", template), e);
             }
             context.getLog().debug("Template result of pass #" + tries);
@@ -48,6 +49,6 @@ public class TemplateProcessor {
             throw new CyclicPropertyReferenceException(message);
         }
 
-        return lastPass;
+        return lastPass.replaceAll("%(\\{|\\()", "\\$$1");
     }
 }

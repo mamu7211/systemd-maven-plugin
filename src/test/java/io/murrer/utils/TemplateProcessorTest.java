@@ -100,7 +100,7 @@ public class TemplateProcessorTest {
             "${unit.wantedBy}," + UnitProperties.DEFAULT_WANTED_BY,
             "${unit.type}," + UnitProperties.DEFAULT_TYPE,
             "${unit.restart}," + UnitProperties.DEFAULT_RESTART,
-            "${unit.execStart}," + DEFAULT_EXECUTION_DIRECTORY + "/" + RunProperties.DEFAULT_RUN_FILENAME, //RunProperties.DEFAULT_JAVA_PATH + "/java -jar " + BUILD_FINALNAME + ".jar",
+            "${unit.execStart}," + DEFAULT_EXECUTION_DIRECTORY + "/" + PROJECT_ARTIFACT_ID + ".sh run",
             "${unit.workingDirectory}," + DEFAULT_EXECUTION_DIRECTORY,
             // Install Replacements
             "${install.fileName}," + InstallProperties.DEFAULT_INSTALL_FILE_NAME,
@@ -120,6 +120,13 @@ public class TemplateProcessorTest {
         assertEquals(expected, actual, String.format("Template result '%s' did not match expected '%s'", actual, expected));
     }
 
+
+    @Test
+    public void testBash() throws SystemdMojoExecutionException {
+        String actual = TemplateProcessor.process("%{var}-%(var)", mojoContext);
+        assertEquals("${var}-$(var)", actual);
+    }
+
     @Test
     public void testUnitResourceTemplate() throws SystemdMojoExecutionException {
         TemplateProcessor.process(ResourceUtils.textOf("templates/unit.service"), mojoContext);
@@ -136,7 +143,7 @@ public class TemplateProcessorTest {
     }
 
     @Test
-    public void testRunResourceTemplate() throws SystemdMojoExecutionException {
+    public void testServiceResourceTemplate() throws SystemdMojoExecutionException {
         TemplateProcessor.process(ResourceUtils.textOf("templates/service.sh"), mojoContext);
     }
 }
