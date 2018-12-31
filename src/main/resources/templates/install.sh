@@ -14,8 +14,12 @@ else
 fi
 
 echo "Copying files to '%{TARGET}'."
-cp -r "%{CURRENT}/*" "%{TARGET}" || exit 1
+cp -r . "%{TARGET}" || exit 1
+
+echo "Changing owner."
+chown -R ${unit.user}:${unit.user} "%{TARGET}"
 
 echo "Installing systemd unit '${unit.fileName}'."
 cd "%{TARGET}"
-${run.fileName} install
+chmod u+x ./${run.fileName}
+./${run.fileName} install
