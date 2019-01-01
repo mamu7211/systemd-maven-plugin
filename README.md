@@ -18,7 +18,7 @@ Source code can be found at the [projects home](https://github.com/mamu7211/syst
 ### Limitations
 
 1. Currently this plugin has a big flaw, it does not create a user for it's service in the default install script, nor
-does it change the file permissions of it's default working/install directory at `/var/<project.artifactId>/<project.version>`.
+does it change the file permissions of it's default working/install directory at `/var/<project.artifactId>/<project.version>` - this would have to be done by hand for now.
 2. Only one JAR Artifact will be added to the created zip file, this is due to the fact that this plugin is primarily used 
 by the Author for [Spring Boot](https://spring.io/projects/spring-boot) projects.
 3. Empty `environment.cfg` files will be created, the project currently contains code to fetch unassigned/unreferenced
