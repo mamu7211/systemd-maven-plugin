@@ -3,7 +3,7 @@
 ## Overview
 
 This [Apache Maven](https://maven.apache.org/) Plugin can be used to generate files needed for running a Java 
-application as a [Systemd Unit](https://www.freedesktop.org/software/systemd/man/systemd.service.html).
+application (preferrably a Spring Boot Service) as a [Systemd Unit](https://www.freedesktop.org/software/systemd/man/systemd.service.html).
 
 |File|Purpose|
 |---|---|
