@@ -26,6 +26,7 @@ properties in `application.properties` of the project using this plugin, but doe
 the generated `environment.cfg`` . 
 4. Not well integrated into the build process and not tested with [Maven Modules](https://maven.apache.org/guides/mini/guide-multiple-modules.html).
 5. Documentation not detailed enough.
+6. Testing does not utilize Mavens [maven-plugin-testing-harness](https://maven.apache.org/plugin-developers/plugin-testing.html).
 
 ## Usage
 
