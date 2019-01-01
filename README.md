@@ -7,11 +7,11 @@ application as a [Systemd Unit](https://www.freedesktop.org/software/systemd/man
 
 |File|Purpose|
 |---|---|
-|`<service>.sh` | Bash script to manage a unit/service. |
+|`<service>.sh` | Bash script to manage - e.g. start, stop, install - a unit/service. |
 |`<service>.service` | Systemd Service Unit configuration. | 
-|`install.sh` | Bash script to install the service. | 
 |`environment.cfg`| Environment variables used to run the unit. | 
 |`<service>.zip`| Bundled maven artifact and above files. | 
+|`install.sh` | Bash script to install the files, *not* the service. |
 
 Source code can be found at the [projects home](https://github.com/mamu7211/systemd-maven-plugin).
 
@@ -24,18 +24,17 @@ by the Author for [Spring Boot](https://spring.io/projects/spring-boot) projects
 3. Empty `environment.cfg` files will be created, the project currently contains code to fetch unassigned/unreferenced
 properties in `application.properties` of the project using this plugin, but does not evaluate or write them into 
 the generated `environment.cfg`` . 
+4. Not well integrated into the build process.
+5. Documentation not detailed enough.
 
 ## Usage
 
 ```xml
+    ...
     <build>
+        ...
         <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                </configuration>
-            </plugin>
+            ...
             <plugin>
                 <groupId>io.murrer</groupId>
                 <artifactId>systemd-maven-plugin</artifactId>
@@ -63,11 +62,16 @@ the generated `environment.cfg`` .
                     </execution>
                 </executions>
             </plugin>
+            ...
         </plugins>
     </build>
 ```
 
+See [Wiki](https://github.com/mamu7211/systemd-maven-plugin/wiki/Usage) for examples.
+
 ### Properties
+
+See [Wiki](https://github.com/mamu7211/systemd-maven-plugin/wiki/Properties) for examples.
 
 ### Files
 
@@ -81,6 +85,8 @@ the generated `environment.cfg`` .
 
 ## Templating
 
+See [Wiki](https://github.com/mamu7211/systemd-maven-plugin/wiki/Templating) for more information.
+
 ### Unit File
 
 ### Serivce File
@@ -93,7 +99,8 @@ the generated `environment.cfg`` .
 
 ### Roadmap
 
-Theres a lot to do, e.g. making this project available in the central repo, enhance and fix environment file generation, but currently this project has no clear direction.
+Theres a lot to do, e.g. documentation, making this project available in the central repo, enhance and fix 
+environment file generation, but currently this project has no clear direction.
 
 ### Contribute
 
