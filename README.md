@@ -24,7 +24,7 @@ by the Author for [Spring Boot](https://spring.io/projects/spring-boot) projects
 3. Empty `environment.cfg` files will be created, the project currently contains code to fetch unassigned/unreferenced
 properties in `application.properties` of the project using this plugin, but does not evaluate or write them into 
 the generated `environment.cfg`` . 
-4. Not well integrated into the build process.
+4. Not well integrated into the build process and not tested with [Maven Modules](https://maven.apache.org/guides/mini/guide-multiple-modules.html).
 5. Documentation not detailed enough.
 
 ## Usage
